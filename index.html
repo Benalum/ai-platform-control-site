@@ -2,199 +2,237 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>AI Image Studio</title>
+  <title>AI Image Testing Lab</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Create, edit, upscale, and transform images with AI.">
+  <meta name="description" content="A focused testing page for AI image generation prompts, settings, queue behavior, and image outputs.">
   <link rel="stylesheet" href="/styles.css">
-  <link rel="manifest" href="/site.webmanifest">
 </head>
 <body>
-  <header class="hero">
+  <header class="topbar">
+    <a class="brand" href="#">
+      <span class="brand-mark">AI</span>
+      <span>
+        <strong>Image Testing Lab</strong>
+        <small>Prompt → Queue → Result</small>
+      </span>
+    </a>
+
     <nav class="nav">
-      <a class="brand" href="#">
-        <span class="logo">AI</span>
-        <span>AI Image Studio</span>
-      </a>
-
-      <div class="nav-links">
-        <a href="#tools">Tools</a>
-        <a href="#examples">Examples</a>
-        <a href="#how">How it Works</a>
-        <a class="nav-cta" href="#start">Coming Soon</a>
-      </div>
+      <a href="#generator">Generator</a>
+      <a href="#tests">Tests</a>
+      <a href="#results">Results</a>
+      <a href="#api">API</a>
     </nav>
-
-    <section class="hero-grid">
-      <div class="hero-copy">
-        <p class="eyebrow">AI image creation and editing</p>
-        <h1>Create and edit images with AI.</h1>
-        <p class="subtitle">
-          Generate new pictures from text, edit existing images, remove backgrounds,
-          upscale details, restore photos, and create professional visuals in minutes.
-        </p>
-
-        <div class="hero-actions">
-          <a class="btn primary" href="#tools">Explore Tools</a>
-          <a class="btn secondary" href="#how">How it Works</a>
-        </div>
-
-        <div class="trust-row">
-          <span>Text to image</span>
-          <span>Image editing</span>
-          <span>Upscaling</span>
-          <span>Background removal</span>
-        </div>
-      </div>
-
-      <div class="preview-card">
-        <div class="preview-top">
-          <span></span>
-          <span></span>
-          <span></span>
-        </div>
-
-        <div class="image-preview">
-          <div class="sun"></div>
-          <div class="mountain m1"></div>
-          <div class="mountain m2"></div>
-          <div class="trail"></div>
-          <div class="flower f1"></div>
-          <div class="flower f2"></div>
-          <div class="flower f3"></div>
-        </div>
-
-        <div class="prompt-box">
-          <strong>Prompt</strong>
-          <p>A realistic dirt trail surrounded by colorful flowers, tall trees, and warm afternoon sunlight.</p>
-        </div>
-      </div>
-    </section>
   </header>
 
   <main>
-    <section id="tools" class="section">
-      <div class="section-heading">
-        <p class="eyebrow">Tools</p>
-        <h2>Everything for AI-powered image creation.</h2>
+    <section class="hero">
+      <div class="hero-copy">
+        <p class="eyebrow">AI image generation testing</p>
+        <h1>Test prompts, settings, and image outputs.</h1>
+        <p class="subtitle">
+          A focused page for experimenting with text-to-image generation, prompt strength,
+          negative prompts, image size, seed values, and queue behavior before connecting
+          the final ComfyUI backend.
+        </p>
+
+        <div class="hero-actions">
+          <a class="btn primary" href="#generator">Open Generator</a>
+          <a class="btn secondary" href="#tests">Use Test Prompts</a>
+        </div>
       </div>
 
-      <div class="tool-grid">
-        <article class="tool-card">
-          <div class="icon">✦</div>
-          <h3>Text to Image</h3>
-          <p>Describe the picture you want and generate realistic, artistic, or cinematic images.</p>
-        </article>
+      <aside class="status-panel" aria-label="Current test status">
+        <div class="status-header">
+          <span class="pulse"></span>
+          <strong>Testing Mode</strong>
+        </div>
+        <div class="status-row">
+          <span>Frontend</span>
+          <strong>Ready</strong>
+        </div>
+        <div class="status-row">
+          <span>Backend API</span>
+          <strong id="apiStatus">Mock</strong>
+        </div>
+        <div class="status-row">
+          <span>Queue</span>
+          <strong id="queueStatus">Idle</strong>
+        </div>
+        <div class="status-row">
+          <span>Last seed</span>
+          <strong id="lastSeed">—</strong>
+        </div>
+      </aside>
+    </section>
 
-        <article class="tool-card">
-          <div class="icon">✎</div>
-          <h3>Image Editing</h3>
-          <p>Upload an image and change specific parts while keeping the rest of the picture intact.</p>
-        </article>
+    <section id="generator" class="lab-grid">
+      <form class="generator-card" id="generatorForm">
+        <div class="section-title">
+          <p class="eyebrow">Generator</p>
+          <h2>Create a test image request</h2>
+        </div>
 
-        <article class="tool-card">
-          <div class="icon">⬆</div>
-          <h3>Upscale Images</h3>
-          <p>Improve resolution, sharpen details, and make images look cleaner for sharing or printing.</p>
-        </article>
+        <label>
+          Prompt
+          <textarea id="prompt" rows="6" placeholder="Example: realistic dirt trail surrounded by grass, colorful flowers, tall trees, afternoon sunlight, lime green leaves with yellow hues, clear sky"></textarea>
+        </label>
 
-        <article class="tool-card">
-          <div class="icon">◌</div>
-          <h3>Remove Backgrounds</h3>
-          <p>Cut out subjects, create clean product photos, or prepare transparent PNG-style assets.</p>
-        </article>
+        <label>
+          Negative prompt
+          <textarea id="negativePrompt" rows="3" placeholder="Example: blurry, distorted face, extra limbs, low quality, watermark, text, clouds"></textarea>
+        </label>
 
-        <article class="tool-card">
-          <div class="icon">☼</div>
-          <h3>Photo Restore</h3>
-          <p>Improve old, blurry, dark, or damaged photos with AI enhancement tools.</p>
-        </article>
+        <div class="settings-grid">
+          <label>
+            Mode
+            <select id="mode">
+              <option>Text to Image</option>
+              <option>Image Edit</option>
+              <option>Upscale Test</option>
+              <option>Background Test</option>
+            </select>
+          </label>
 
-        <article class="tool-card">
-          <div class="icon">◆</div>
-          <h3>Style Transfer</h3>
-          <p>Transform images into different looks, including realistic, fantasy, sketch, and cinematic styles.</p>
-        </article>
+          <label>
+            Style
+            <select id="style">
+              <option>Realistic</option>
+              <option>Cinematic</option>
+              <option>Product Photo</option>
+              <option>Fantasy</option>
+              <option>Concept Art</option>
+            </select>
+          </label>
+
+          <label>
+            Size
+            <select id="size">
+              <option>1024 × 1024</option>
+              <option>1024 × 768</option>
+              <option>768 × 1024</option>
+              <option>1344 × 768</option>
+            </select>
+          </label>
+
+          <label>
+            Steps
+            <input id="steps" type="number" min="10" max="80" value="30">
+          </label>
+
+          <label>
+            CFG
+            <input id="cfg" type="number" min="1" max="20" step="0.5" value="7">
+          </label>
+
+          <label>
+            Seed
+            <input id="seed" type="number" min="0" placeholder="Random">
+          </label>
+        </div>
+
+        <div class="form-actions">
+          <button class="btn primary" type="submit">Generate Test</button>
+          <button class="btn secondary" type="button" id="randomSeedBtn">Random Seed</button>
+          <button class="btn ghost" type="reset">Clear</button>
+        </div>
+      </form>
+
+      <aside class="output-card">
+        <div class="section-title">
+          <p class="eyebrow">Output</p>
+          <h2>Current test result</h2>
+        </div>
+
+        <div class="mock-image" id="mockImage" role="img" aria-label="Mock generated image preview">
+          <div class="sky-orb"></div>
+          <div class="shape shape-a"></div>
+          <div class="shape shape-b"></div>
+          <div class="shape shape-c"></div>
+          <div class="scanline"></div>
+        </div>
+
+        <div class="result-meta">
+          <div>
+            <span>Status</span>
+            <strong id="resultStatus">Waiting for test</strong>
+          </div>
+          <div>
+            <span>Mode</span>
+            <strong id="resultMode">—</strong>
+          </div>
+          <div>
+            <span>Size</span>
+            <strong id="resultSize">—</strong>
+          </div>
+          <div>
+            <span>Steps / CFG</span>
+            <strong id="resultSettings">—</strong>
+          </div>
+        </div>
+      </aside>
+    </section>
+
+    <section id="tests" class="section">
+      <div class="section-title">
+        <p class="eyebrow">Prompt tests</p>
+        <h2>One-click prompts for testing image quality.</h2>
+      </div>
+
+      <div class="test-grid">
+        <button class="test-card" data-prompt="realistic dirt trail surrounded by lush grass, colorful wildflowers, tall trees, afternoon sunlight passing through lime green leaves with yellow hues, clear blue sky, no clouds, highly detailed, natural lighting" data-negative="clouds, blurry, low detail, dull colors, watermark, text">
+          <strong>Nature Trail</strong>
+          <span>Lighting, foliage, color control</span>
+        </button>
+
+        <button class="test-card" data-prompt="professional studio product photo of a matte black smart water bottle on a clean reflective surface, softbox lighting, crisp edges, commercial photography, high detail" data-negative="messy background, low quality, warped product, text, watermark">
+          <strong>Product Photo</strong>
+          <span>Edges, reflections, clean background</span>
+        </button>
+
+        <button class="test-card" data-prompt="cinematic portrait of a futuristic explorer wearing a practical jacket, dramatic rim light, shallow depth of field, realistic skin texture, detailed eyes" data-negative="deformed face, extra fingers, bad eyes, plastic skin, blurry, low quality">
+          <strong>Portrait Test</strong>
+          <span>Face, eyes, hands, realism</span>
+        </button>
+
+        <button class="test-card" data-prompt="cozy modern workstation with dual monitors, mechanical keyboard, soft LED lighting, clean desk, realistic room, high detail, warm atmosphere" data-negative="clutter, warped monitors, unreadable text, blurry, low quality">
+          <strong>Workspace</strong>
+          <span>Objects, screens, room detail</span>
+        </button>
       </div>
     </section>
 
-    <section id="examples" class="section alt">
-      <div class="section-heading">
-        <p class="eyebrow">Use cases</p>
-        <h2>Create images for anything.</h2>
+    <section id="results" class="section">
+      <div class="section-title">
+        <p class="eyebrow">Testing history</p>
+        <h2>Recent generation requests.</h2>
       </div>
 
-      <div class="examples-grid">
-        <div class="example-card">
-          <div class="mini-art product"></div>
-          <h3>Product photos</h3>
-          <p>Create clean product visuals for websites, stores, ads, and social media.</p>
-        </div>
-
-        <div class="example-card">
-          <div class="mini-art portrait"></div>
-          <h3>Profile images</h3>
-          <p>Generate polished avatars, portraits, thumbnails, and branded profile pictures.</p>
-        </div>
-
-        <div class="example-card">
-          <div class="mini-art landscape"></div>
-          <h3>Creative scenes</h3>
-          <p>Turn ideas into landscapes, fantasy scenes, realistic environments, and story visuals.</p>
-        </div>
+      <div class="history-list" id="historyList">
+        <p class="empty">No tests yet. Submit a prompt above to create a test record.</p>
       </div>
     </section>
 
-    <section id="how" class="section">
-      <div class="section-heading">
-        <p class="eyebrow">Workflow</p>
-        <h2>Simple for users, powerful behind the scenes.</h2>
-      </div>
-
-      <div class="steps">
-        <div class="step">
-          <span>1</span>
-          <h3>Describe or upload</h3>
-          <p>Start with a text prompt or upload an image you want to edit.</p>
-        </div>
-
-        <div class="step">
-          <span>2</span>
-          <h3>Choose a tool</h3>
-          <p>Pick generation, editing, upscaling, background removal, or restoration.</p>
-        </div>
-
-        <div class="step">
-          <span>3</span>
-          <h3>AI creates it</h3>
-          <p>Your request is placed into a queue and processed by available AI workers.</p>
-        </div>
-
-        <div class="step">
-          <span>4</span>
-          <h3>Download or refine</h3>
-          <p>Save the final image or keep editing until it looks right.</p>
-        </div>
-      </div>
-    </section>
-
-    <section id="start" class="cta-section">
+    <section id="api" class="api-card">
       <div>
-        <p class="eyebrow">Coming soon</p>
-        <h2>AI Image Studio is being built now.</h2>
+        <p class="eyebrow">Backend connection</p>
+        <h2>Ready for the real image API later.</h2>
         <p>
-          The first version will focus on text-to-image generation, image editing,
-          upscaling, and a simple queue-based dashboard.
+          This page currently runs in mock mode so you can design and test the user experience.
+          When your FastAPI/ComfyUI queue endpoint is ready, set the API endpoint in
+          <code>script.js</code> and the form can post real generation jobs.
         </p>
       </div>
 
-      <a class="btn primary" href="mailto:contact@alexhartel.com?subject=AI%20Image%20Studio%20Waitlist">
-        Join the Waitlist
-      </a>
+      <div class="code-box">
+        <span>Planned endpoint</span>
+        <code>POST /api/v1/images/generate</code>
+      </div>
     </section>
   </main>
 
   <footer>
-    <p>AI Image Studio · Create and edit images with AI</p>
+    <p>AI Image Testing Lab · Built for prompt testing and generation experiments</p>
   </footer>
 
   <script src="/script.js"></script>

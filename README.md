@@ -1,92 +1,75 @@
-# AI Platform Control Website
+# AI Image Testing Lab
 
-This is a static website for the **AI Platform Control** project.
+A focused static website for testing the user experience of an AI image generation service.
 
-It is designed to be pushed to GitHub and connected to **Cloudflare Pages**.
+## Purpose
 
-## Recommended domain
+This page is only for image generation and testing:
 
-Use a separate subdomain so the current locally hosted site stays untouched:
-
-```text
-platform.alexhartel.com
-```
+- Prompt testing
+- Negative prompt testing
+- Mode selection
+- Style selection
+- Size, steps, CFG, and seed controls
+- Mock queue behavior
+- Test request history
+- Future API connection point
 
 ## Files
 
 ```text
-.
-├── index.html
-├── styles.css
-├── script.js
-├── assets/
-│   ├── logo.svg
-│   ├── architecture.svg
-│   └── queue-flow.svg
-├── docs/
-│   └── cloudflare-pages-setup.md
-├── _headers
-├── _redirects
-├── .gitignore
-└── README.md
+index.html
+styles.css
+script.js
 ```
 
-## Local testing
-
-From inside the repository:
+## Local preview
 
 ```bash
 python3 -m http.server 8080
 ```
 
-Then open:
+Open:
 
 ```text
 http://127.0.0.1:8080
 ```
 
-## GitHub setup
-
-```bash
-git init
-git add .
-git commit -m "Initial AI Platform Control website"
-git branch -M main
-git remote add origin https://github.com/YOUR_USERNAME/ai-platform-control-site.git
-git push -u origin main
-```
-
-## Cloudflare Pages setup
-
-In Cloudflare:
-
-```text
-Workers & Pages
-→ Create application
-→ Pages
-→ Connect to Git
-→ Select this GitHub repository
-```
-
-Recommended build settings:
+## Cloudflare Pages settings
 
 ```text
 Framework preset: None
-Build command: leave blank, or use exit 0 if Cloudflare requires a command
+Build command: leave blank
 Build output directory: /
 Root directory: /
 Production branch: main
 ```
 
-Then add the custom domain:
+## Connect the real backend later
 
-```text
-platform.alexhartel.com
+In `script.js`, change:
+
+```js
+const API_ENDPOINT = "";
 ```
 
-## Editing workflow
+to your future endpoint:
 
-1. Edit the files locally.
-2. Test with `python3 -m http.server 8080`.
-3. Commit and push.
-4. Cloudflare Pages automatically deploys the new version.
+```js
+const API_ENDPOINT = "https://studio.alexhartel.com/api/v1/images/generate";
+```
+
+Expected request body:
+
+```json
+{
+  "prompt": "realistic trail...",
+  "negative_prompt": "blurry, watermark...",
+  "mode": "Text to Image",
+  "style": "Realistic",
+  "size": "1024 × 1024",
+  "steps": 30,
+  "cfg": 7,
+  "seed": 123456
+}
+```
