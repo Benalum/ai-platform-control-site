@@ -1,0 +1,16 @@
+{
+  "name": "AI Platform Control",
+  "short_name": "AI Platform",
+  "description": "Local-first distributed AI services platform.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#07111f",
+  "theme_color": "#07111f",
+  "icons": [
+    {
+      "src": "assets/logo.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}
