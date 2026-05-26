@@ -1,298 +1,202 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <title>AI Platform Control</title>
-  <meta name="description" content="A local-first distributed AI services platform with queued jobs, worker scheduling, ComfyUI, OpenWebUI, and per-user storage." />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta property="og:title" content="AI Platform Control" />
-  <meta property="og:description" content="Distributed AI services across local and cloud workers." />
-  <meta property="og:type" content="website" />
-  <meta name="theme-color" content="#07111f" />
-  <link rel="icon" href="assets/logo.svg" type="image/svg+xml" />
-  <link rel="manifest" href="site.webmanifest" />
-  <link rel="stylesheet" href="styles.css" />
+  <meta charset="utf-8">
+  <title>AI Image Studio</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Create, edit, upscale, and transform images with AI.">
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="manifest" href="/site.webmanifest">
 </head>
 <body>
-  <a class="skip-link" href="#main">Skip to content</a>
-
-  <header class="site-header">
+  <header class="hero">
     <nav class="nav">
-      <a class="brand" href="#top" aria-label="AI Platform Control home">
-        <img src="assets/logo.svg" alt="" class="brand-logo" />
-        <span>AI Platform Control</span>
+      <a class="brand" href="#">
+        <span class="logo">AI</span>
+        <span>AI Image Studio</span>
       </a>
 
-      <button class="nav-toggle" type="button" aria-label="Toggle navigation" aria-expanded="false">
-        <span></span><span></span><span></span>
-      </button>
-
-      <div class="nav-links" data-nav-links>
-        <a href="#overview">Overview</a>
-        <a href="#services">Services</a>
-        <a href="#architecture">Architecture</a>
-        <a href="#queue">Queue</a>
-        <a href="#pricing">Pricing</a>
-        <a href="#roadmap">Roadmap</a>
+      <div class="nav-links">
+        <a href="#tools">Tools</a>
+        <a href="#examples">Examples</a>
+        <a href="#how">How it Works</a>
+        <a class="nav-cta" href="#start">Coming Soon</a>
       </div>
     </nav>
+
+    <section class="hero-grid">
+      <div class="hero-copy">
+        <p class="eyebrow">AI image creation and editing</p>
+        <h1>Create and edit images with AI.</h1>
+        <p class="subtitle">
+          Generate new pictures from text, edit existing images, remove backgrounds,
+          upscale details, restore photos, and create professional visuals in minutes.
+        </p>
+
+        <div class="hero-actions">
+          <a class="btn primary" href="#tools">Explore Tools</a>
+          <a class="btn secondary" href="#how">How it Works</a>
+        </div>
+
+        <div class="trust-row">
+          <span>Text to image</span>
+          <span>Image editing</span>
+          <span>Upscaling</span>
+          <span>Background removal</span>
+        </div>
+      </div>
+
+      <div class="preview-card">
+        <div class="preview-top">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+
+        <div class="image-preview">
+          <div class="sun"></div>
+          <div class="mountain m1"></div>
+          <div class="mountain m2"></div>
+          <div class="trail"></div>
+          <div class="flower f1"></div>
+          <div class="flower f2"></div>
+          <div class="flower f3"></div>
+        </div>
+
+        <div class="prompt-box">
+          <strong>Prompt</strong>
+          <p>A realistic dirt trail surrounded by colorful flowers, tall trees, and warm afternoon sunlight.</p>
+        </div>
+      </div>
+    </section>
   </header>
 
-  <main id="main">
-    <section class="hero" id="top">
-      <div class="hero-copy">
-        <p class="eyebrow">Local-first distributed AI infrastructure</p>
-        <h1>Build an AI services platform that can grow beyond one machine.</h1>
-        <p class="hero-subtitle">
-          Start with your own Proxmox workers, ComfyUI, OpenWebUI, and per-user storage.
-          When demand grows, route jobs through a queue and expand to more local machines or cloud GPU workers.
-        </p>
-        <div class="hero-actions">
-          <a class="button primary" href="#architecture">See Architecture</a>
-          <a class="button secondary" href="#roadmap">View Roadmap</a>
-        </div>
-
-        <div class="hero-stats" aria-label="Project targets">
-          <div>
-            <strong>1</strong>
-            <span>control plane</span>
-          </div>
-          <div>
-            <strong>∞</strong>
-            <span>future workers</span>
-          </div>
-          <div>
-            <strong>25%</strong>
-            <span>target markup model</span>
-          </div>
-        </div>
-      </div>
-
-      <aside class="hero-panel" aria-label="Current platform status">
-        <div class="panel-header">
-          <span class="pulse"></span>
-          <strong>Platform Status</strong>
-        </div>
-        <dl class="status-list">
-          <div>
-            <dt>Static Site</dt>
-            <dd>Cloudflare Pages</dd>
-          </div>
-          <div>
-            <dt>Control API</dt>
-            <dd>Planned</dd>
-          </div>
-          <div>
-            <dt>ComfyUI Worker</dt>
-            <dd>Local-first</dd>
-          </div>
-          <div>
-            <dt>OpenWebUI</dt>
-            <dd>Existing service</dd>
-          </div>
-          <div>
-            <dt>User Storage</dt>
-            <dd>SFTPGo next</dd>
-          </div>
-        </dl>
-      </aside>
-    </section>
-
-    <section class="section" id="overview">
+  <main>
+    <section id="tools" class="section">
       <div class="section-heading">
-        <p class="eyebrow">Overview</p>
-        <h2>A public site for the project, not your current homepage.</h2>
-        <p>
-          This site is designed to live in its own GitHub repository and deploy through Cloudflare Pages.
-          Your current locally hosted website can stay exactly how it is while this project gets a separate domain,
-          such as <code>platform.alexhartel.com</code>.
-        </p>
+        <p class="eyebrow">Tools</p>
+        <h2>Everything for AI-powered image creation.</h2>
       </div>
 
-      <div class="feature-grid three">
-        <article class="feature-card">
-          <span class="icon">🧠</span>
-          <h3>AI Services</h3>
-          <p>Public dashboard for AI image, chat, file, and future video-generation workflows.</p>
+      <div class="tool-grid">
+        <article class="tool-card">
+          <div class="icon">✦</div>
+          <h3>Text to Image</h3>
+          <p>Describe the picture you want and generate realistic, artistic, or cinematic images.</p>
         </article>
-        <article class="feature-card">
-          <span class="icon">📦</span>
-          <h3>Queued Jobs</h3>
-          <p>Every expensive action becomes a queued job so workers can process tasks safely.</p>
-        </article>
-        <article class="feature-card">
-          <span class="icon">🖥️</span>
-          <h3>Worker Network</h3>
-          <p>Local computers, Proxmox containers, and future cloud GPUs can join as workers.</p>
-        </article>
-      </div>
-    </section>
 
-    <section class="section" id="services">
-      <div class="section-heading compact">
-        <p class="eyebrow">Services</p>
-        <h2>What the platform will eventually offer</h2>
-      </div>
+        <article class="tool-card">
+          <div class="icon">✎</div>
+          <h3>Image Editing</h3>
+          <p>Upload an image and change specific parts while keeping the rest of the picture intact.</p>
+        </article>
 
-      <div class="service-list">
-        <article>
-          <h3>ComfyUI Image Generation</h3>
-          <p>Users submit prompts through a controlled dashboard. Jobs are queued, assigned to workers, and saved to per-user storage.</p>
+        <article class="tool-card">
+          <div class="icon">⬆</div>
+          <h3>Upscale Images</h3>
+          <p>Improve resolution, sharpen details, and make images look cleaner for sharing or printing.</p>
         </article>
-        <article>
-          <h3>OpenWebUI / Local LLM Access</h3>
-          <p>Provide chat access while keeping model routing, user limits, and admin controls behind your own platform.</p>
+
+        <article class="tool-card">
+          <div class="icon">◌</div>
+          <h3>Remove Backgrounds</h3>
+          <p>Cut out subjects, create clean product photos, or prepare transparent PNG-style assets.</p>
         </article>
-        <article>
-          <h3>SFTPGo User Storage</h3>
-          <p>Give users their own upload/download area with future checksum verification and encryption options.</p>
+
+        <article class="tool-card">
+          <div class="icon">☼</div>
+          <h3>Photo Restore</h3>
+          <p>Improve old, blurry, dark, or damaged photos with AI enhancement tools.</p>
         </article>
-        <article>
-          <h3>Resource-Aware Scheduling</h3>
-          <p>Before a job runs, the scheduler checks worker CPU, RAM, VRAM, disk space, active jobs, and supported job types.</p>
+
+        <article class="tool-card">
+          <div class="icon">◆</div>
+          <h3>Style Transfer</h3>
+          <p>Transform images into different looks, including realistic, fantasy, sketch, and cinematic styles.</p>
         </article>
       </div>
     </section>
 
-    <section class="section split" id="architecture">
-      <div>
-        <p class="eyebrow">Architecture</p>
-        <h2>Control plane first, workers second.</h2>
-        <p>
-          The public dashboard should not expose raw ComfyUI or raw admin tools.
-          Users submit jobs to your platform API. The scheduler then chooses the best worker.
-        </p>
-        <ul class="check-list">
-          <li>FastAPI backend for accounts, job creation, and status APIs.</li>
-          <li>PostgreSQL for users, jobs, billing, files, and audit records.</li>
-          <li>Redis queue for pending work.</li>
-          <li>Python worker agent installed on machines that can run jobs.</li>
-        </ul>
+    <section id="examples" class="section alt">
+      <div class="section-heading">
+        <p class="eyebrow">Use cases</p>
+        <h2>Create images for anything.</h2>
       </div>
-      <figure class="image-card">
-        <img src="assets/architecture.svg" alt="Architecture diagram showing users, Cloudflare, dashboard, API, database, queue, scheduler, workers, and storage." />
-        <figcaption>High-level architecture for the AI services platform.</figcaption>
-      </figure>
-    </section>
 
-    <section class="section split reverse" id="queue">
-      <figure class="image-card">
-        <img src="assets/queue-flow.svg" alt="Queue flow diagram showing submit, validate, queue, schedule, run, verify, and deliver stages." />
-        <figcaption>Queued jobs protect the platform from overload and make scaling easier.</figcaption>
-      </figure>
-      <div>
-        <p class="eyebrow">Queue</p>
-        <h2>Every heavy task becomes a controlled job.</h2>
-        <p>
-          The queue lets the platform say: “This worker has enough resources; run the job there.”
-          If not, the job waits or gets quoted for cloud execution.
-        </p>
+      <div class="examples-grid">
+        <div class="example-card">
+          <div class="mini-art product"></div>
+          <h3>Product photos</h3>
+          <p>Create clean product visuals for websites, stores, ads, and social media.</p>
+        </div>
 
-        <div class="steps">
-          <div><strong>01</strong><span>User submits job</span></div>
-          <div><strong>02</strong><span>API validates request</span></div>
-          <div><strong>03</strong><span>Job enters queue</span></div>
-          <div><strong>04</strong><span>Scheduler assigns worker</span></div>
-          <div><strong>05</strong><span>Worker saves result</span></div>
+        <div class="example-card">
+          <div class="mini-art portrait"></div>
+          <h3>Profile images</h3>
+          <p>Generate polished avatars, portraits, thumbnails, and branded profile pictures.</p>
+        </div>
+
+        <div class="example-card">
+          <div class="mini-art landscape"></div>
+          <h3>Creative scenes</h3>
+          <p>Turn ideas into landscapes, fantasy scenes, realistic environments, and story visuals.</p>
         </div>
       </div>
     </section>
 
-    <section class="section" id="pricing">
-      <div class="section-heading compact">
-        <p class="eyebrow">Business model</p>
-        <h2>Cloud fallback with markup can become the profit layer.</h2>
+    <section id="how" class="section">
+      <div class="section-heading">
+        <p class="eyebrow">Workflow</p>
+        <h2>Simple for users, powerful behind the scenes.</h2>
+      </div>
+
+      <div class="steps">
+        <div class="step">
+          <span>1</span>
+          <h3>Describe or upload</h3>
+          <p>Start with a text prompt or upload an image you want to edit.</p>
+        </div>
+
+        <div class="step">
+          <span>2</span>
+          <h3>Choose a tool</h3>
+          <p>Pick generation, editing, upscaling, background removal, or restoration.</p>
+        </div>
+
+        <div class="step">
+          <span>3</span>
+          <h3>AI creates it</h3>
+          <p>Your request is placed into a queue and processed by available AI workers.</p>
+        </div>
+
+        <div class="step">
+          <span>4</span>
+          <h3>Download or refine</h3>
+          <p>Save the final image or keep editing until it looks right.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="start" class="cta-section">
+      <div>
+        <p class="eyebrow">Coming soon</p>
+        <h2>AI Image Studio is being built now.</h2>
         <p>
-          Local workers handle cheap jobs first. If local capacity is full or a job requires more GPU power,
-          the platform can quote cloud compute cost, add a margin, and only run after the user accepts.
+          The first version will focus on text-to-image generation, image editing,
+          upscaling, and a simple queue-based dashboard.
         </p>
       </div>
 
-      <div class="pricing-grid">
-        <article class="pricing-card">
-          <h3>Local Worker</h3>
-          <p class="price">$ Low cost</p>
-          <ul>
-            <li>Runs on owned hardware</li>
-            <li>Best for normal queue load</li>
-            <li>Higher profit margin</li>
-          </ul>
-        </article>
-        <article class="pricing-card highlighted">
-          <h3>Hybrid Overflow</h3>
-          <p class="price">Cloud quote + 25%</p>
-          <ul>
-            <li>Quote before expensive jobs</li>
-            <li>Scale beyond home hardware</li>
-            <li>Only run when profitable</li>
-          </ul>
-        </article>
-        <article class="pricing-card">
-          <h3>Dedicated User Tier</h3>
-          <p class="price">Subscription</p>
-          <ul>
-            <li>Priority queue</li>
-            <li>Storage allowance</li>
-            <li>Higher job limits</li>
-          </ul>
-        </article>
-      </div>
-    </section>
-
-    <section class="section" id="roadmap">
-      <div class="section-heading compact">
-        <p class="eyebrow">Roadmap</p>
-        <h2>Build in safe phases.</h2>
-      </div>
-
-      <div class="timeline">
-        <article>
-          <span>Phase 1</span>
-          <h3>Project website</h3>
-          <p>Deploy this static site to Cloudflare Pages through GitHub.</p>
-        </article>
-        <article>
-          <span>Phase 2</span>
-          <h3>Control-plane API</h3>
-          <p>Create FastAPI, health checks, PostgreSQL schema, and Redis queue.</p>
-        </article>
-        <article>
-          <span>Phase 3</span>
-          <h3>First ComfyUI job</h3>
-          <p>Submit a text-to-image job and retrieve the result safely.</p>
-        </article>
-        <article>
-          <span>Phase 4</span>
-          <h3>Worker agent</h3>
-          <p>Install agents that report resources and accept compatible jobs.</p>
-        </article>
-        <article>
-          <span>Phase 5</span>
-          <h3>User storage</h3>
-          <p>Add SFTPGo-backed file spaces, checksums, and upload hooks.</p>
-        </article>
-        <article>
-          <span>Phase 6</span>
-          <h3>Billing and cloud overflow</h3>
-          <p>Quote cloud jobs, apply markup, and track cost/profit per job.</p>
-        </article>
-      </div>
-    </section>
-
-    <section class="section cta">
-      <p class="eyebrow">Next step</p>
-      <h2>Push this to GitHub, then connect Cloudflare Pages.</h2>
-      <p>
-        Once connected, every GitHub push can trigger a new deployment and every branch can get a preview URL for testing.
-      </p>
-      <a class="button primary" href="#top">Back to top</a>
+      <a class="btn primary" href="mailto:contact@alexhartel.com?subject=AI%20Image%20Studio%20Waitlist">
+        Join the Waitlist
+      </a>
     </section>
   </main>
 
-  <footer class="footer">
-    <p>AI Platform Control · Local-first AI infrastructure · Built for scalable job scheduling</p>
+  <footer>
+    <p>AI Image Studio · Create and edit images with AI</p>
   </footer>
 
-  <script src="script.js"></script>
+  <script src="/script.js"></script>
 </body>
 </html>
