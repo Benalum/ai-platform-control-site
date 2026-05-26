@@ -1,21 +1,6 @@
-# OS/editor junk
-.DS_Store
-Thumbs.db
-.vscode/
-.idea/
-
-# Logs
-*.log
-
-# Temporary files
-tmp/
-.cache/
-
-# Node output if added later
 node_modules/
-dist/
-build/
-
-# Environment files
+.DS_Store
 .env
 .env.*
+dist/
+.cache/

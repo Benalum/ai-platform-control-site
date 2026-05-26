@@ -2,238 +2,217 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>AI Image Testing Lab</title>
+  <title>AI Image Queue Console</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="A focused testing page for AI image generation prompts, settings, queue behavior, and image outputs.">
+  <meta name="description" content="Submit AI image generation prompts, wake the server if needed, and queue ComfyUI jobs.">
   <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
-  <header class="topbar">
-    <a class="brand" href="#">
-      <span class="brand-mark">AI</span>
-      <span>
-        <strong>Image Testing Lab</strong>
-        <small>Prompt → Queue → Result</small>
-      </span>
-    </a>
+  <main class="app-shell">
+    <section class="intro-panel">
+      <p class="eyebrow">AI image generation test page</p>
+      <h1>Submit an image prompt to the ComfyUI queue.</h1>
+      <p class="subtitle">
+        This page collects the user prompt, checks whether the image server is online,
+        requests a wake-up if it is offline, then submits the job to your backend queue.
+      </p>
 
-    <nav class="nav">
-      <a href="#generator">Generator</a>
-      <a href="#tests">Tests</a>
-      <a href="#results">Results</a>
-      <a href="#api">API</a>
-    </nav>
-  </header>
-
-  <main>
-    <section class="hero">
-      <div class="hero-copy">
-        <p class="eyebrow">AI image generation testing</p>
-        <h1>Test prompts, settings, and image outputs.</h1>
-        <p class="subtitle">
-          A focused page for experimenting with text-to-image generation, prompt strength,
-          negative prompts, image size, seed values, and queue behavior before connecting
-          the final ComfyUI backend.
-        </p>
-
-        <div class="hero-actions">
-          <a class="btn primary" href="#generator">Open Generator</a>
-          <a class="btn secondary" href="#tests">Use Test Prompts</a>
+      <div class="flow-strip" aria-label="Job submission flow">
+        <div class="flow-step">
+          <span>1</span>
+          <strong>User prompt</strong>
+          <small>Collect prompt and settings</small>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">
+          <span>2</span>
+          <strong>Server check</strong>
+          <small>Ping backend health route</small>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">
+          <span>3</span>
+          <strong>Wake if needed</strong>
+          <small>Request wake endpoint</small>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">
+          <span>4</span>
+          <strong>Queue job</strong>
+          <small>Send to ComfyUI queue</small>
         </div>
       </div>
-
-      <aside class="status-panel" aria-label="Current test status">
-        <div class="status-header">
-          <span class="pulse"></span>
-          <strong>Testing Mode</strong>
-        </div>
-        <div class="status-row">
-          <span>Frontend</span>
-          <strong>Ready</strong>
-        </div>
-        <div class="status-row">
-          <span>Backend API</span>
-          <strong id="apiStatus">Mock</strong>
-        </div>
-        <div class="status-row">
-          <span>Queue</span>
-          <strong id="queueStatus">Idle</strong>
-        </div>
-        <div class="status-row">
-          <span>Last seed</span>
-          <strong id="lastSeed">—</strong>
-        </div>
-      </aside>
     </section>
 
-    <section id="generator" class="lab-grid">
-      <form class="generator-card" id="generatorForm">
-        <div class="section-title">
-          <p class="eyebrow">Generator</p>
-          <h2>Create a test image request</h2>
+    <section class="workspace">
+      <form id="imageJobForm" class="card generator-card">
+        <div class="card-title-row">
+          <div>
+            <p class="eyebrow small">Request</p>
+            <h2>Image generation prompt</h2>
+          </div>
+          <div class="mode-pill" id="modePill">Mock mode</div>
         </div>
 
-        <label>
-          Prompt
-          <textarea id="prompt" rows="6" placeholder="Example: realistic dirt trail surrounded by grass, colorful flowers, tall trees, afternoon sunlight, lime green leaves with yellow hues, clear sky"></textarea>
-        </label>
+        <label for="prompt">Prompt</label>
+        <textarea id="prompt" name="prompt" rows="7" required placeholder="Example: A realistic dirt trail surrounded by lush grass, colorful flowers, tall trees, lime green leaves with yellow hues, warm afternoon sunlight, no clouds in the sky."></textarea>
 
-        <label>
-          Negative prompt
-          <textarea id="negativePrompt" rows="3" placeholder="Example: blurry, distorted face, extra limbs, low quality, watermark, text, clouds"></textarea>
-        </label>
+        <label for="negativePrompt">Negative prompt</label>
+        <textarea id="negativePrompt" name="negativePrompt" rows="3" placeholder="Example: blurry, low quality, distorted, extra limbs, text, watermark, clouds"></textarea>
 
-        <div class="settings-grid">
-          <label>
-            Mode
-            <select id="mode">
-              <option>Text to Image</option>
-              <option>Image Edit</option>
-              <option>Upscale Test</option>
-              <option>Background Test</option>
+        <div class="grid-2">
+          <div>
+            <label for="style">Style</label>
+            <select id="style" name="style">
+              <option value="realistic">Realistic</option>
+              <option value="cinematic">Cinematic</option>
+              <option value="fantasy">Fantasy</option>
+              <option value="product">Product photo</option>
+              <option value="illustration">Illustration</option>
             </select>
-          </label>
+          </div>
 
-          <label>
-            Style
-            <select id="style">
-              <option>Realistic</option>
-              <option>Cinematic</option>
-              <option>Product Photo</option>
-              <option>Fantasy</option>
-              <option>Concept Art</option>
+          <div>
+            <label for="jobType">Job type</label>
+            <select id="jobType" name="jobType">
+              <option value="txt2img">Text to image</option>
+              <option value="img2img">Image to image later</option>
+              <option value="inpaint">Inpainting later</option>
+              <option value="upscale">Upscale later</option>
             </select>
-          </label>
-
-          <label>
-            Size
-            <select id="size">
-              <option>1024 × 1024</option>
-              <option>1024 × 768</option>
-              <option>768 × 1024</option>
-              <option>1344 × 768</option>
-            </select>
-          </label>
-
-          <label>
-            Steps
-            <input id="steps" type="number" min="10" max="80" value="30">
-          </label>
-
-          <label>
-            CFG
-            <input id="cfg" type="number" min="1" max="20" step="0.5" value="7">
-          </label>
-
-          <label>
-            Seed
-            <input id="seed" type="number" min="0" placeholder="Random">
-          </label>
+          </div>
         </div>
 
-        <div class="form-actions">
-          <button class="btn primary" type="submit">Generate Test</button>
-          <button class="btn secondary" type="button" id="randomSeedBtn">Random Seed</button>
-          <button class="btn ghost" type="reset">Clear</button>
+        <div class="grid-4">
+          <div>
+            <label for="width">Width</label>
+            <input id="width" name="width" type="number" min="256" max="2048" step="64" value="1024">
+          </div>
+          <div>
+            <label for="height">Height</label>
+            <input id="height" name="height" type="number" min="256" max="2048" step="64" value="1024">
+          </div>
+          <div>
+            <label for="steps">Steps</label>
+            <input id="steps" name="steps" type="number" min="1" max="80" value="28">
+          </div>
+          <div>
+            <label for="cfg">CFG</label>
+            <input id="cfg" name="cfg" type="number" min="1" max="20" step="0.5" value="7">
+          </div>
         </div>
+
+        <div class="grid-2">
+          <div>
+            <label for="seed">Seed</label>
+            <input id="seed" name="seed" type="number" value="-1">
+          </div>
+
+          <div>
+            <label for="userLabel">User/job label</label>
+            <input id="userLabel" name="userLabel" type="text" placeholder="Optional: Alex test 001">
+          </div>
+        </div>
+
+        <div class="button-row">
+          <button type="submit" class="primary-btn">Check server and queue image</button>
+          <button type="button" id="fillExample" class="secondary-btn">Use test prompt</button>
+        </div>
+
+        <p class="hint">
+          Real server wake and ComfyUI queue submission should happen through your backend API, not directly from the browser.
+        </p>
       </form>
 
-      <aside class="output-card">
-        <div class="section-title">
-          <p class="eyebrow">Output</p>
-          <h2>Current test result</h2>
-        </div>
+      <aside class="side-stack">
+        <section class="card status-card">
+          <div class="card-title-row">
+            <div>
+              <p class="eyebrow small">Pipeline</p>
+              <h2>Server and queue status</h2>
+            </div>
+            <button id="manualServerCheck" class="tiny-btn" type="button">Check now</button>
+          </div>
 
-        <div class="mock-image" id="mockImage" role="img" aria-label="Mock generated image preview">
-          <div class="sky-orb"></div>
-          <div class="shape shape-a"></div>
-          <div class="shape shape-b"></div>
-          <div class="shape shape-c"></div>
-          <div class="scanline"></div>
-        </div>
+          <ol class="status-list" id="statusList">
+            <li data-state="idle">
+              <span class="dot"></span>
+              <div>
+                <strong>Waiting for prompt</strong>
+                <small>Submit a job to start the workflow.</small>
+              </div>
+            </li>
+          </ol>
 
-        <div class="result-meta">
-          <div>
-            <span>Status</span>
-            <strong id="resultStatus">Waiting for test</strong>
+          <div class="result-box">
+            <p class="eyebrow small">Latest response</p>
+            <pre id="latestResponse">No job submitted yet.</pre>
           </div>
-          <div>
-            <span>Mode</span>
-            <strong id="resultMode">—</strong>
+        </section>
+
+        <section class="card config-card">
+          <p class="eyebrow small">Backend connection</p>
+          <h2>API settings</h2>
+
+          <label for="apiBase">API base URL</label>
+          <input id="apiBase" type="url" placeholder="https://api.alexhartel.com" autocomplete="off">
+
+          <div class="endpoint-grid">
+            <div>
+              <strong>Health</strong>
+              <code>/health</code>
+            </div>
+            <div>
+              <strong>Wake</strong>
+              <code>/wake</code>
+            </div>
+            <div>
+              <strong>Queue</strong>
+              <code>/jobs/comfyui</code>
+            </div>
           </div>
-          <div>
-            <span>Size</span>
-            <strong id="resultSize">—</strong>
+
+          <div class="button-row compact">
+            <button id="saveApiBase" class="secondary-btn" type="button">Save API URL</button>
+            <button id="clearApiBase" class="ghost-btn" type="button">Mock mode</button>
           </div>
-          <div>
-            <span>Steps / CFG</span>
-            <strong id="resultSettings">—</strong>
-          </div>
-        </div>
+
+          <p class="hint">
+            Leave this blank while testing the page design. Add your API URL after your backend is ready.
+          </p>
+        </section>
       </aside>
     </section>
 
-    <section id="tests" class="section">
-      <div class="section-title">
-        <p class="eyebrow">Prompt tests</p>
-        <h2>One-click prompts for testing image quality.</h2>
-      </div>
-
-      <div class="test-grid">
-        <button class="test-card" data-prompt="realistic dirt trail surrounded by lush grass, colorful wildflowers, tall trees, afternoon sunlight passing through lime green leaves with yellow hues, clear blue sky, no clouds, highly detailed, natural lighting" data-negative="clouds, blurry, low detail, dull colors, watermark, text">
-          <strong>Nature Trail</strong>
-          <span>Lighting, foliage, color control</span>
-        </button>
-
-        <button class="test-card" data-prompt="professional studio product photo of a matte black smart water bottle on a clean reflective surface, softbox lighting, crisp edges, commercial photography, high detail" data-negative="messy background, low quality, warped product, text, watermark">
-          <strong>Product Photo</strong>
-          <span>Edges, reflections, clean background</span>
-        </button>
-
-        <button class="test-card" data-prompt="cinematic portrait of a futuristic explorer wearing a practical jacket, dramatic rim light, shallow depth of field, realistic skin texture, detailed eyes" data-negative="deformed face, extra fingers, bad eyes, plastic skin, blurry, low quality">
-          <strong>Portrait Test</strong>
-          <span>Face, eyes, hands, realism</span>
-        </button>
-
-        <button class="test-card" data-prompt="cozy modern workstation with dual monitors, mechanical keyboard, soft LED lighting, clean desk, realistic room, high detail, warm atmosphere" data-negative="clutter, warped monitors, unreadable text, blurry, low quality">
-          <strong>Workspace</strong>
-          <span>Objects, screens, room detail</span>
-        </button>
-      </div>
-    </section>
-
-    <section id="results" class="section">
-      <div class="section-title">
-        <p class="eyebrow">Testing history</p>
-        <h2>Recent generation requests.</h2>
-      </div>
-
-      <div class="history-list" id="historyList">
-        <p class="empty">No tests yet. Submit a prompt above to create a test record.</p>
-      </div>
-    </section>
-
-    <section id="api" class="api-card">
-      <div>
-        <p class="eyebrow">Backend connection</p>
-        <h2>Ready for the real image API later.</h2>
-        <p>
-          This page currently runs in mock mode so you can design and test the user experience.
-          When your FastAPI/ComfyUI queue endpoint is ready, set the API endpoint in
-          <code>script.js</code> and the form can post real generation jobs.
-        </p>
-      </div>
-
-      <div class="code-box">
-        <span>Planned endpoint</span>
-        <code>POST /api/v1/images/generate</code>
+    <section class="card notes-card">
+      <p class="eyebrow small">Backend contract</p>
+      <h2>Designed to be reusable for other programs later.</h2>
+      <div class="contract-grid">
+        <div>
+          <h3>1. Browser submits</h3>
+          <p>The page sends a structured JSON request to your API. Later, you can reuse the same flow for video, audio, chat, file processing, or other tools.</p>
+        </div>
+        <div>
+          <h3>2. API controls wake</h3>
+          <p>Your backend checks if the server is online. If not, it wakes the machine using safe server-side logic such as WOL, Tailscale, router tools, or Proxmox automation.</p>
+        </div>
+        <div>
+          <h3>3. Queue handles jobs</h3>
+          <p>The backend writes the request into a queue. A worker then sends it to ComfyUI when resources are available.</p>
+        </div>
       </div>
     </section>
   </main>
 
-  <footer>
-    <p>AI Image Testing Lab · Built for prompt testing and generation experiments</p>
-  </footer>
+  <template id="statusItemTemplate">
+    <li>
+      <span class="dot"></span>
+      <div>
+        <strong></strong>
+        <small></small>
+      </div>
+    </li>
+  </template>
 
   <script src="/script.js"></script>
 </body>
